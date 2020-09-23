@@ -450,7 +450,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Calculadora";
-            this.Text = "CalculadoraS";
+            this.Text = "Calculadora_V1";
             this.ResumeLayout(false);
             this.PerformLayout();
 
