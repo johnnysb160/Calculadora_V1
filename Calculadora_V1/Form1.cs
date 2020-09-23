@@ -72,7 +72,7 @@ namespace Calculadora_V1
         {
             if (!txtBox.Text.Contains(","))
             {
-                if(txtBox.Text == "0")
+                if (txtBox.Text == "0")
                 {
                     Ebibir("0,");
                 }
@@ -80,7 +80,7 @@ namespace Calculadora_V1
                 {
                     Ebibir(",");
                 }
-      
+
             }
         }
         private void btnSomar_Click(object sender, EventArgs e)
@@ -143,6 +143,7 @@ namespace Calculadora_V1
         public double Valor1 = 0;
         public double Valor2 = 0;
         public double Aux = 0;
+        public bool status = false;
         private void Atribuicao(string operador)
         {
 
@@ -161,13 +162,16 @@ namespace Calculadora_V1
             else
             {
                 Valor1 = double.Parse(txtBox.Text.Replace(",", "."), CultureInfo.InvariantCulture);
-                txtBox.Text = "";
+                status = true;
             }
 
         }
         private void Ebibir(string valor)
         {
-
+            if (lblOperador.Text !="" && status==true)
+            {
+                txtBox.Text = "";
+            }
             if (txtBox.TextLength <= 7)
             {
                 if (txtBox.Text == "0")
@@ -177,6 +181,7 @@ namespace Calculadora_V1
                 else
                 {
                     txtBox.Text += valor;
+                    status = false;
                 }
             }
 
