@@ -239,7 +239,7 @@
             this.txtBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 28.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.txtBox.Location = new System.Drawing.Point(12, 13);
-            this.txtBox.MaxLength = 15;
+            this.txtBox.MaxLength = 5;
             this.txtBox.Name = "txtBox";
             this.txtBox.Size = new System.Drawing.Size(192, 50);
             this.txtBox.TabIndex = 11;

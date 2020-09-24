@@ -110,7 +110,6 @@ namespace Calculadora_V1
             Atribuicao("%");
         }
         public double Total = 0;
-        public bool StatusTotal = false;
         private void btnIgual_Click(object sender, EventArgs e)
         {
             if (txtBox.TextLength > 13 || txtBox.Text == "Error")
@@ -150,9 +149,7 @@ namespace Calculadora_V1
                 txtBox.Text = "0";
                 return;
             }
-            Total = Math.Round(Aux, 2);
-            StatusTotal = true;
-            Exibir(Total.ToString());
+            txtBox.Text = Math.Round(Aux, 2).ToString();
         }
         public double Valor1 = 0;
         public double Valor2 = 0;
@@ -160,7 +157,6 @@ namespace Calculadora_V1
         public bool status = false;
         private void Atribuicao(string operador)
         {
-
             lblOperador.Text = operador;
             if (operador == "²√")
             {
@@ -178,18 +174,16 @@ namespace Calculadora_V1
                 Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
                 status = true;
             }
-
         }
         private void Exibir(string valor)
         {
-            if (StatusTotal == false)
-            {
+            int aux = 0;
                 if (lblOperador.Text != "" && status == true)
                 {
                     txtBox.Text = "";
                     txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
                 }
-                if (txtBox.TextLength <= 13)
+                if (txtBox.TextLength <= 10)
                 {
                     if (txtBox.Text == "0")
                     {
@@ -197,51 +191,41 @@ namespace Calculadora_V1
                     }
                     else
                     {
-                        if (txtBox.TextLength > 2 && !txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
+                        if (valor == ",")
                         {
-                            txtBox.Text = txtBox.Text.Insert(1, ".");
+                            txtBox.Text += valor;
+                            status = false;
                         }
-                        if (txtBox.TextLength > 6 && txtBox.TextLength < 8 && txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
+                        else
                         {
-                            txtBox.Text = txtBox.Text.Insert(5, ".");
+
+
+                            if (txtBox.TextLength > 2 && txtBox.TextLength <= 4 && !txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
+                            {
+                                aux = txtBox.TextLength;
+                                txtBox.Text = txtBox.Text.Insert(aux - 2, ".");
+                            }
+                            if (txtBox.TextLength > 4 && txtBox.TextLength <= 6 && txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
+                            {
+                                txtBox.Text = txtBox.Text.Replace(".", "");
+                                aux = txtBox.TextLength;
+                                txtBox.Text = txtBox.Text.Insert(aux - 2, ".");
+                            }
+                            if (txtBox.TextLength > 6 && txtBox.TextLength <= 10 && txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
+                            {
+                                txtBox.Text = txtBox.Text.Replace(".", "");
+                                aux = txtBox.TextLength;
+                                txtBox.Text = txtBox.Text.Insert(aux - 5, ".").Insert(aux - 1, ".");
+                            }
+                            if (txtBox.TextLength >= 8)
+                            {
+                                txtBox.Font = new Font(txtBox.Font.FontFamily, txtBox.Font.Size - 2);
+                            }
+                            txtBox.Text += valor;
+                            status = false;
                         }
-                        if (txtBox.TextLength > 9 && txtBox.TextLength < 11 && txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
-                        {
-                            txtBox.Text = txtBox.Text.Insert(9, ".");
-                        }
-                        if (txtBox.TextLength >= 8)
-                        {
-                            txtBox.Font = new Font(txtBox.Font.FontFamily, txtBox.Font.Size - 2);
-                        }
-                        txtBox.Text += valor;
-                        status = false;
                     }
                 }
-            }
-            else
-            {
-                if (valor.Length > 2 && valor.Length <= 6 && !valor.Contains(","))
-                {
-                    valor = valor.Insert(1, ".");
-                }
-                if (valor.Length > 6 && valor.Length <= 10 && !valor.Contains(","))
-                {
-                    valor = valor.Insert(1, ".").Insert(5, ".");
-                }
-                if (valor.Length > 10 && valor.Length <= 13 && !valor.Contains(","))
-                {
-                    valor = valor.Insert(1, ".").Insert(5, ".").Insert(9, ".");
-                }
-                if (valor.Length > 13)
-                {
-                    txtBox.Text = "E-"+valor;
-                    lblOperador.Text = "";
-                    txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
-                    return;
-                }
-                txtBox.Text = valor;
-                StatusTotal = false;
-            }
         }
         private void btnApagar_Click(object sender, EventArgs e)
         {
