@@ -21,52 +21,52 @@ namespace Calculadora_V1
 
         private void btn0_Click(object sender, EventArgs e)
         {
-            Ebibir("0");
+            Exibir("0");
         }
 
         private void btn1_Click(object sender, EventArgs e)
         {
-            Ebibir("1");
+            Exibir("1");
         }
 
         private void btn2_Click(object sender, EventArgs e)
         {
-            Ebibir("2");
+            Exibir("2");
         }
 
         private void btn3_Click(object sender, EventArgs e)
         {
-            Ebibir("3");
+            Exibir("3");
         }
 
         private void btn4_Click(object sender, EventArgs e)
         {
-            Ebibir("4");
+            Exibir("4");
         }
 
         private void btn5_Click(object sender, EventArgs e)
         {
-            Ebibir("5");
+            Exibir("5");
         }
 
         private void btn6_Click(object sender, EventArgs e)
         {
-            Ebibir("6");
+            Exibir("6");
         }
 
         private void btn7_Click(object sender, EventArgs e)
         {
-            Ebibir("7");
+            Exibir("7");
         }
 
         private void btn8_Click(object sender, EventArgs e)
         {
-            Ebibir("8");
+            Exibir("8");
         }
 
         private void btn9_Click(object sender, EventArgs e)
         {
-            Ebibir("9");
+            Exibir("9");
         }
         private void btnVirgula_Click(object sender, EventArgs e)
         {
@@ -74,11 +74,11 @@ namespace Calculadora_V1
             {
                 if (txtBox.Text == "0")
                 {
-                    Ebibir("0,");
+                    Exibir("0,");
                 }
                 else
                 {
-                    Ebibir(",");
+                    Exibir(",");
                 }
 
             }
@@ -109,9 +109,21 @@ namespace Calculadora_V1
         {
             Atribuicao("%");
         }
+        public double Total = 0;
+        public bool StatusTotal = false;
         private void btnIgual_Click(object sender, EventArgs e)
         {
-            Valor2 = double.Parse(txtBox.Text.Replace(",", "."), CultureInfo.InvariantCulture);
+            if (txtBox.TextLength > 13 || txtBox.Text == "Error")
+            {
+                txtBox.Text = "Error";
+                lblOperador.Text = "";
+                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                return;
+            }
+            else
+            {
+                Valor2 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
+            }
             if (lblOperador.Text == "+")
             {
                 Aux = Valor1 + Valor2;
@@ -138,7 +150,9 @@ namespace Calculadora_V1
                 txtBox.Text = "0";
                 return;
             }
-            txtBox.Text = Math.Round(Aux, 2).ToString();
+            Total = Math.Round(Aux, 2);
+            StatusTotal = true;
+            Exibir(Total.ToString());
         }
         public double Valor1 = 0;
         public double Valor2 = 0;
@@ -150,56 +164,114 @@ namespace Calculadora_V1
             lblOperador.Text = operador;
             if (operador == "²√")
             {
-                Valor1 = double.Parse(txtBox.Text.Replace(",", "."), CultureInfo.InvariantCulture);
+                Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
                 txtBox.Text = Math.Sqrt(Valor1).ToString();
             }
             else if (operador == "%")
             {
-                Valor2 = double.Parse(txtBox.Text.Replace(",", "."), CultureInfo.InvariantCulture);
+                Valor2 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
                 Aux = (Valor2 / 100);
                 txtBox.Text = Aux.ToString();
             }
             else
             {
-                Valor1 = double.Parse(txtBox.Text.Replace(",", "."), CultureInfo.InvariantCulture);
+                Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
                 status = true;
             }
 
         }
-        private void Ebibir(string valor)
+        private void Exibir(string valor)
         {
-            if (lblOperador.Text !="" && status==true)
+            if (StatusTotal == false)
             {
-                txtBox.Text = "";
+                if (lblOperador.Text != "" && status == true)
+                {
+                    txtBox.Text = "";
+                    txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                }
+                if (txtBox.TextLength <= 13)
+                {
+                    if (txtBox.Text == "0")
+                    {
+                        txtBox.Text = valor;
+                    }
+                    else
+                    {
+                        if (txtBox.TextLength > 2 && !txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
+                        {
+                            txtBox.Text = txtBox.Text.Insert(1, ".");
+                        }
+                        if (txtBox.TextLength > 6 && txtBox.TextLength < 8 && txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
+                        {
+                            txtBox.Text = txtBox.Text.Insert(5, ".");
+                        }
+                        if (txtBox.TextLength > 9 && txtBox.TextLength < 11 && txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
+                        {
+                            txtBox.Text = txtBox.Text.Insert(9, ".");
+                        }
+                        if (txtBox.TextLength >= 8)
+                        {
+                            txtBox.Font = new Font(txtBox.Font.FontFamily, txtBox.Font.Size - 2);
+                        }
+                        txtBox.Text += valor;
+                        status = false;
+                    }
+                }
             }
-            if (txtBox.TextLength <= 7)
+            else
             {
-                if (txtBox.Text == "0")
+                if (valor.Length > 2 && valor.Length <= 6 && !valor.Contains(","))
                 {
-                    txtBox.Text = valor;
+                    valor = valor.Insert(1, ".");
                 }
-                else
+                if (valor.Length > 6 && valor.Length <= 10 && !valor.Contains(","))
                 {
-                    txtBox.Text += valor;
-                    status = false;
+                    valor = valor.Insert(1, ".").Insert(5, ".");
                 }
+                if (valor.Length > 10 && valor.Length <= 13 && !valor.Contains(","))
+                {
+                    valor = valor.Insert(1, ".").Insert(5, ".").Insert(9, ".");
+                }
+                if (valor.Length > 13)
+                {
+                    txtBox.Text = "E-"+valor;
+                    lblOperador.Text = "";
+                    txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                    return;
+                }
+                txtBox.Text = valor;
+                StatusTotal = false;
             }
-
-
         }
         private void btnApagar_Click(object sender, EventArgs e)
         {
             txtBox.Text = "0";
             lblOperador.Text = "";
+            txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
         }
 
         private void btnLimpar_Click(object sender, EventArgs e)
         {
-            txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 1);
+            if (txtBox.Text.LastIndexOf(".") == txtBox.TextLength - 2 && txtBox.TextLength > 1)
+            {
+                txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 2);
+            }
+            else
+            {
+                txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 1);
+            }
             if (txtBox.TextLength == 0)
             {
                 lblOperador.Text = "";
                 txtBox.Text = "0";
+            }
+            if (txtBox.TextLength >= 8)
+            {
+                txtBox.Font = new Font(txtBox.Font.FontFamily, txtBox.Font.Size + 2);
+            }
+            else
+            {
+                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
             }
         }
 
