@@ -112,7 +112,7 @@ namespace Calculadora_V1
         public double Total = 0;
         private void btnIgual_Click(object sender, EventArgs e)
         {
-            if (txtBox.TextLength > 13 || txtBox.Text == "Error")
+            if (txtBox.TextLength > 10 || txtBox.Text == "Error")
             {
                 txtBox.Text = "Error";
                 lblOperador.Text = "";
@@ -161,7 +161,15 @@ namespace Calculadora_V1
             if (operador == "²√")
             {
                 Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
-                txtBox.Text = Math.Sqrt(Valor1).ToString();
+                string aux = Math.Sqrt(Valor1).ToString();
+                if (aux.Length > 9)
+                {
+                    txtBox.Text = Math.Sqrt(Valor1).ToString().Substring(0,9);
+                }
+                else
+                {
+                    txtBox.Text = Math.Sqrt(Valor1).ToString();
+                }
             }
             else if (operador == "%")
             {
@@ -198,8 +206,6 @@ namespace Calculadora_V1
                         }
                         else
                         {
-
-
                             if (txtBox.TextLength > 2 && txtBox.TextLength <= 4 && !txtBox.Text.Contains(".") && !txtBox.Text.Contains(","))
                             {
                                 aux = txtBox.TextLength;
@@ -236,26 +242,32 @@ namespace Calculadora_V1
 
         private void btnLimpar_Click(object sender, EventArgs e)
         {
-            if (txtBox.Text.LastIndexOf(".") == txtBox.TextLength - 2 && txtBox.TextLength > 1)
-            {
-                txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 2);
+            if (lblOperador.Text=="" || status == false) {
+                if (txtBox.Text.LastIndexOf(".") == txtBox.TextLength - 2 && txtBox.TextLength > 1)
+                {
+                    txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 2);
+                }
+                else
+                {
+                    txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 1);
+                }
+                if (txtBox.TextLength == 0)
+                {
+                    lblOperador.Text = "";
+                    txtBox.Text = "0";
+                }
+                if (txtBox.TextLength >= 8)
+                {
+                    txtBox.Font = new Font(txtBox.Font.FontFamily, txtBox.Font.Size + 2);
+                }
+                else
+                {
+                    txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                }
             }
             else
-            {
-                txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 1);
-            }
-            if (txtBox.TextLength == 0)
             {
                 lblOperador.Text = "";
-                txtBox.Text = "0";
-            }
-            if (txtBox.TextLength >= 8)
-            {
-                txtBox.Font = new Font(txtBox.Font.FontFamily, txtBox.Font.Size + 2);
-            }
-            else
-            {
-                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
             }
         }
 
