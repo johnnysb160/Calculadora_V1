@@ -18,7 +18,10 @@ namespace Calculadora_V1
             InitializeComponent();
         }
 
-
+        public double Valor1 = 0;
+        public double Valor2 = 0;
+        public double Aux = 0;
+        public bool status = false;
         private void btn0_Click(object sender, EventArgs e)
         {
             Exibir("0");
@@ -116,7 +119,7 @@ namespace Calculadora_V1
         {
             Atribuicao("%");
         }
-        public double Total = 0;
+
         private void btnIgual_Click(object sender, EventArgs e)
         {
             try
@@ -174,10 +177,7 @@ namespace Calculadora_V1
                 return;
             }
         }
-        public double Valor1 = 0;
-        public double Valor2 = 0;
-        public double Aux = 0;
-        public bool status = false;
+
         private void Atribuicao(string operador)
         {
             lblOperador.Text = operador;
@@ -204,8 +204,8 @@ namespace Calculadora_V1
                 }
                 else
                 {
-                    Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
-                    status = true;
+                        Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
+                        status = true;
                 }
             }
             catch (Exception)
@@ -307,7 +307,7 @@ namespace Calculadora_V1
                     {
                         txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 1);
                     }
-                    if (txtBox.TextLength == 0 || txtBox.Text != "Error")
+                    if (txtBox.TextLength == 0 || txtBox.Text.Where(c => char.IsLetter(c)).Count() > 0)
                     {
                         lblOperador.Text = "";
                         txtBox.Text = "0";
