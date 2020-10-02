@@ -63,24 +63,33 @@ namespace Calculadora_V1
         {
             Exibir("8");
         }
-
         private void btn9_Click(object sender, EventArgs e)
         {
             Exibir("9");
         }
         private void btnVirgula_Click(object sender, EventArgs e)
         {
-            if (!txtBox.Text.Contains(","))
+            try
             {
-                if (txtBox.Text == "0")
+                if (!txtBox.Text.Contains(","))
                 {
-                    Exibir("0,");
-                }
-                else
-                {
-                    Exibir(",");
-                }
+                    if (txtBox.Text == "0")
+                    {
+                        Exibir("0,");
+                    }
+                    else
+                    {
+                        Exibir(",");
+                    }
 
+                }
+            }
+            catch (Exception)
+            {
+                txtBox.Text = "Error";
+                lblOperador.Text = "";
+                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                return;
             }
         }
         private void btnSomar_Click(object sender, EventArgs e)
@@ -91,12 +100,10 @@ namespace Calculadora_V1
         {
             Atribuicao("-");
         }
-
         private void btnMultiplicar_Click(object sender, EventArgs e)
         {
             Atribuicao("x");
         }
-
         private void btnDividir_Click(object sender, EventArgs e)
         {
             Atribuicao("÷");
@@ -112,44 +119,60 @@ namespace Calculadora_V1
         public double Total = 0;
         private void btnIgual_Click(object sender, EventArgs e)
         {
-            if (txtBox.TextLength > 10 || txtBox.Text == "Error")
+            try
+            {
+                if (txtBox.TextLength > 10 || txtBox.Text == "Error")
+                {
+                    txtBox.Text = "Error";
+                    lblOperador.Text = "";
+                    txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                    return;
+                }
+                else
+                {
+                    Valor2 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
+                }
+                switch (lblOperador.Text)
+                {
+                    case "+":
+                        Aux = Valor1 + Valor2;
+                        break;
+                    case "-":
+                        Aux = Valor1 - Valor2;
+                        break;
+                    case "x":
+                        Aux = Valor1 * Valor2;
+                        break;
+                    case "÷":
+                        if (Valor2 != 0)
+                        {
+                            Aux = Valor1 / Valor2;
+                        }
+                        else
+                        {
+                            txtBox.Text = "Não é possível dividir por zero";
+                            lblOperador.Text = "";
+                            txtBox.Font = new Font(txtBox.Font.FontFamily, 10);
+                            return;
+                        }
+                        break;
+                    case "%":
+                        Aux = Valor1 * Aux;
+                        break;
+                    case "²√":
+                        lblOperador.Text = "";
+                        txtBox.Text = "0";
+                        break;
+                }
+                txtBox.Text = Math.Round(Aux, 2).ToString();
+            }
+            catch (Exception)
             {
                 txtBox.Text = "Error";
                 lblOperador.Text = "";
                 txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
                 return;
             }
-            else
-            {
-                Valor2 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
-            }
-            if (lblOperador.Text == "+")
-            {
-                Aux = Valor1 + Valor2;
-            }
-            if (lblOperador.Text == "-")
-            {
-                Aux = Valor1 - Valor2;
-            }
-            if (lblOperador.Text == "x")
-            {
-                Aux = Valor1 * Valor2;
-            }
-            if (lblOperador.Text == "÷")
-            {
-                Aux = Valor1 / Valor2;
-            }
-            if (lblOperador.Text == "%")
-            {
-                Aux = Valor1 * Aux;
-            }
-            if (lblOperador.Text == "²√")
-            {
-                lblOperador.Text = "";
-                txtBox.Text = "0";
-                return;
-            }
-            txtBox.Text = Math.Round(Aux, 2).ToString();
         }
         public double Valor1 = 0;
         public double Valor2 = 0;
@@ -158,34 +181,46 @@ namespace Calculadora_V1
         private void Atribuicao(string operador)
         {
             lblOperador.Text = operador;
-            if (operador == "²√")
+            try
             {
-                Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
-                string aux = Math.Sqrt(Valor1).ToString();
-                if (aux.Length > 9)
+                if (operador == "²√")
                 {
-                    txtBox.Text = Math.Sqrt(Valor1).ToString().Substring(0,9);
+                    Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
+                    string aux = Math.Sqrt(Valor1).ToString();
+                    if (aux.Length > 9)
+                    {
+                        txtBox.Text = Math.Sqrt(Valor1).ToString().Substring(0, 9);
+                    }
+                    else
+                    {
+                        txtBox.Text = Math.Sqrt(Valor1).ToString();
+                    }
+                }
+                else if (operador == "%")
+                {
+                    Valor2 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
+                    Aux = (Valor2 / 100);
+                    txtBox.Text = Aux.ToString();
                 }
                 else
                 {
-                    txtBox.Text = Math.Sqrt(Valor1).ToString();
+                    Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
+                    status = true;
                 }
             }
-            else if (operador == "%")
+            catch (Exception)
             {
-                Valor2 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
-                Aux = (Valor2 / 100);
-                txtBox.Text = Aux.ToString();
-            }
-            else
-            {
-                Valor1 = double.Parse(txtBox.Text.Replace(".", "").Replace(",", "."), CultureInfo.InvariantCulture);
-                status = true;
+                txtBox.Text = "Error";
+                lblOperador.Text = "";
+                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                return;
             }
         }
         private void Exibir(string valor)
         {
             int aux = 0;
+            try
+            {
                 if (lblOperador.Text != "" && status == true)
                 {
                     txtBox.Text = "";
@@ -232,42 +267,71 @@ namespace Calculadora_V1
                         }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                txtBox.Text = "Error";
+                lblOperador.Text = "";
+                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                return;
+            }
         }
         private void btnApagar_Click(object sender, EventArgs e)
         {
-            txtBox.Text = "0";
-            lblOperador.Text = "";
-            txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+            try
+            {
+                txtBox.Text = "0";
+                lblOperador.Text = "";
+                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+            }
+            catch (Exception)
+            {
+                txtBox.Text = "Error";
+                lblOperador.Text = "";
+                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                return;
+            }
         }
 
         private void btnLimpar_Click(object sender, EventArgs e)
         {
-            if (lblOperador.Text=="" || status == false) {
-                if (txtBox.Text.LastIndexOf(".") == txtBox.TextLength - 2 && txtBox.TextLength > 1)
+            try
+            {
+                if (lblOperador.Text == "" || status == false)
                 {
-                    txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 2);
+                    if (txtBox.Text.LastIndexOf(".") == txtBox.TextLength - 2 && txtBox.TextLength > 1)
+                    {
+                        txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 2);
+                    }
+                    else
+                    {
+                        txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 1);
+                    }
+                    if (txtBox.TextLength == 0 || txtBox.Text != "Error")
+                    {
+                        lblOperador.Text = "";
+                        txtBox.Text = "0";
+                    }
+                    if (txtBox.TextLength >= 8)
+                    {
+                        txtBox.Font = new Font(txtBox.Font.FontFamily, txtBox.Font.Size + 2);
+                    }
+                    else
+                    {
+                        txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                    }
                 }
                 else
-                {
-                    txtBox.Text = txtBox.Text.Substring(0, txtBox.TextLength - 1);
-                }
-                if (txtBox.TextLength == 0)
                 {
                     lblOperador.Text = "";
-                    txtBox.Text = "0";
-                }
-                if (txtBox.TextLength >= 8)
-                {
-                    txtBox.Font = new Font(txtBox.Font.FontFamily, txtBox.Font.Size + 2);
-                }
-                else
-                {
-                    txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
                 }
             }
-            else
+            catch (Exception)
             {
+                txtBox.Text = "Error";
                 lblOperador.Text = "";
+                txtBox.Font = new Font(txtBox.Font.FontFamily, 28);
+                return;
             }
         }
 
